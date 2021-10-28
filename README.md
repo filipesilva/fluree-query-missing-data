@@ -1,6 +1,6 @@
 # fluree-query-missing-data
 
-Repro for ___
+Repro for https://github.com/fluree/db/issues/126
 
 Fluree will not show data for queries immediately after after the transaction.
 The data will show up a some time after though.
