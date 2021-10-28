@@ -47,16 +47,12 @@
   @(fdb/transact conn ledger schema-tx)
 
   ;; Add an event.
-  @(fdb/transact conn ledger [(new-event 1)])
+  (let [block (:block @(fdb/transact conn ledger [(new-event 1)]))
+        db    (fdb/db conn ledger {:syncTo block})]
 
-  ;; The query returns [] after the transaction.
-  (println @(fdb/query (fdb/db conn ledger) {:select ["*"]
-                                             :from "event"}))
-
-  ;; But after a few seconds the query contains the event.
-  (Thread/sleep 2000)
-  (println @(fdb/query (fdb/db conn ledger) {:select ["*"]
-                                             :from "event"}))
+    ;; The query contains the transaction because syncTo was used.
+    (println @(fdb/query db {:select ["*"]
+                             :from "event"})))
 
   ;; Delete ledger and close conn.
   @(fdb/delete-ledger conn ledger)
